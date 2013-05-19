@@ -24,3 +24,7 @@ local.properties
 *.ipr
 *.iws
 .idea/
+
+# Gradle files
+build/
+.gradle
