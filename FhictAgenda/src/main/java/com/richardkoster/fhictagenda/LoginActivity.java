@@ -3,7 +3,6 @@ package com.richardkoster.fhictagenda;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -11,8 +10,16 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.richardkoster.fhictagenda.api.FhictClient;
+import com.richardkoster.fhictagenda.api.objects.LoginResult;
 
 import java.util.regex.Pattern;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Activity which displays a login screen to the user.
@@ -28,11 +35,6 @@ public class LoginActivity extends Activity {
     };
 
     private static final Pattern PATTERN_PCN = Pattern.compile("^(\\d{6})$");
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     // Values for email and password at the time of the login attempt.
     private String mPcn;
@@ -85,10 +87,6 @@ public class LoginActivity extends Activity {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         mPcnView.setError(null);
         mPasswordView.setError(null);
@@ -127,8 +125,22 @@ public class LoginActivity extends Activity {
             // perform the user login attempt.
             mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute((Void) null);
+            //mAuthTask = new UserLoginTask();
+            //mAuthTask.execute((Void) null);
+            FhictClient.getApi().login(mPcn, mPassword, "TESTING_CLIENT_ID", new Callback<LoginResult>() {
+                @Override
+                public void success(LoginResult loginResult, Response response) {
+                    showProgress(false);
+                    Toast.makeText(getApplicationContext(), loginResult.user.name, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    showProgress(false);
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+            });
         }
     }
 
@@ -159,52 +171,5 @@ public class LoginActivity extends Activity {
                         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                     }
                 });
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mPcn)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
