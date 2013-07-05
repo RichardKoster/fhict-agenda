@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="8dp"
+              android:background="@android:color/background_dark">
+
+    <TextView
+            android:id="@+id/event_title"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_green_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="{{event_title}}"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/reminder_icon"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="6dip"
+                android:maxWidth="8dp"
+                android:src="@android:drawable/ic_lock_idle_alarm"
+                android:adjustViewBounds="true"/>
+
+        <ImageView
+                android:id="@+id/repeat_icon"
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="6dip"
+                android:src="@android:drawable/ic_popup_reminder"
+                android:adjustViewBounds="true"/>
+
+        <TextView
+                android:id="@+id/time"
+                android:textColor="@android:color/holo_blue_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="{{time}}"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/where"
+            android:textColor="@android:color/holo_orange_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="{{where}}"/>
+</LinearLayout>
