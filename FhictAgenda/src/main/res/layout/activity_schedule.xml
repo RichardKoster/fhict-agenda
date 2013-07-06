@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:name="nl.marijnvdwerf.app.ScheduleFragment"
+            android:name="com.richardkoster.fhictagenda.DayScheduleFragment"
             android:id="@+id/fragment"
             tools:layout="@layout/fragment_schedule"/>
 </LinearLayout>

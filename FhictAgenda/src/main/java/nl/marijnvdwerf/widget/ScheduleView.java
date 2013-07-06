@@ -10,9 +10,12 @@ import android.widget.AdapterView;
 
 import com.richardkoster.fhictagenda.R;
 
+import java.util.Date;
+
 public class ScheduleView extends AdapterView<ScheduleAdapter> {
 
     private static int PADDING = 24;
+    private Date mDate = new Date();
 
     private ScheduleAdapter mScheduleAdapter;
 
@@ -37,6 +40,16 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
     @Override
     public void setAdapter(ScheduleAdapter scheduleAdapter) {
         mScheduleAdapter = scheduleAdapter;
+        requestLayout();
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
+        requestLayout();
+    }
+
+    public Date getDate() {
+        return mDate;
     }
 
     @Override
@@ -49,6 +62,25 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
 
     }
 
+    View obtainView(int position) {
+        return getAdapter().getView(position, null, this);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (getAdapter() == null) {
+            return;
+        }
+        for (int i = 0; i < getAdapter().getCountForDate(getDate()); i++) {
+            View child = obtainView(i);
+            child.measure(MeasureSpec.makeMeasureSpec(436, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(128, MeasureSpec.EXACTLY));
+            child.layout(64, 128 * i, 500, 128 * i + 120);
+            addViewInLayout(child, i, null, true);
+        }
+
+        invalidate();
+    }
 
     Paint getHourLabelPaint() {
         Paint paint = new Paint();
@@ -65,16 +97,6 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         int y = PADDING;
         y += Math.round(availableHeight / 24f * time);
         return y;
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        layoutEvents();
-    }
-
-    protected void layoutEvents() {
-
     }
 
     @Override
