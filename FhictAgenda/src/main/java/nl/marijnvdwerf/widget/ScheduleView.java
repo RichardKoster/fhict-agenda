@@ -2,7 +2,11 @@ package nl.marijnvdwerf.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
@@ -29,7 +33,7 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
 
     public ScheduleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        setBackgroundColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -82,8 +86,17 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         invalidate();
     }
 
+    protected int getVerticalPosition(int hour, int minute) {
+        float availableHeight = this.getHeight() - 2 * (PADDING);
+        float time = (float) hour + ((float) minute / 60f);
+        float y = PADDING;
+        y += availableHeight / 24f * time;
+        return Math.round(y);
+    }
+
     Paint getHourLabelPaint() {
         Paint paint = new Paint();
+        paint.setColor(Color.GRAY);
         paint.setTextSize(getResources().getDisplayMetrics().scaledDensity * 13);
         paint.setTypeface(Typeface.DEFAULT);
         paint.setTextAlign(Paint.Align.RIGHT);
@@ -91,26 +104,39 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         return paint;
     }
 
-    protected int getVerticalPosition(int hour, int minute) {
-        float availableHeight = this.getHeight() - 2 * (PADDING);
-        float time = (float) hour + ((float) minute / 60f);
-        int y = PADDING;
-        y += Math.round(availableHeight / 24f * time);
-        return y;
+    public Paint getHourLinePaint() {
+        Paint paint = new Paint();
+        paint.setColor(Color.LTGRAY);
+        paint.setStyle(Paint.Style.STROKE);
+        return paint;
+    }
+
+    public Paint getHalfHourLinePaint() {
+        Paint paint = getHourLinePaint();
+        paint.setPathEffect(new DashPathEffect(new float[]{1, 1}, 0));
+        return paint;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Paint hourPaint = getHourLabelPaint();
-        int lineOffset = (int) (-hourPaint.getFontMetrics().ascent / 2f);
+        Paint hourLabelPaint = getHourLabelPaint();
+        Paint hourLinePaint = getHourLinePaint();
+        Paint halfHourLinePaint = getHalfHourLinePaint();
+        int lineOffset = (int) (-hourLabelPaint.getFontMetrics().ascent / 2f);
 
         for (int i = 0; i <= 24; i++) {
             String time = Integer.toString(i) + ":00";
-            int y = getVerticalPosition(i, 0);
-            canvas.drawText(time, getResources().getDisplayMetrics().scaledDensity * 48, y + lineOffset, hourPaint);
-            canvas.drawLine(getResources().getDisplayMetrics().scaledDensity * (48 + 8), y, getWidth(), y, hourPaint);
+            float hourPosY = getVerticalPosition(i, 0);
+            canvas.drawText(time, getResources().getDisplayMetrics().scaledDensity * 48, hourPosY + lineOffset, hourLabelPaint);
+            canvas.drawLine(getResources().getDisplayMetrics().scaledDensity * (48 + 8), hourPosY, getWidth(), hourPosY, hourLinePaint);
+
+            float halfPosY = getVerticalPosition(i, 30);
+            Path p = new Path();
+            p.moveTo(getResources().getDisplayMetrics().scaledDensity * (48 + 8) + .5f, halfPosY);
+            p.lineTo(getWidth(), halfPosY);
+            canvas.drawPath(p, halfHourLinePaint);
         }
     }
 }

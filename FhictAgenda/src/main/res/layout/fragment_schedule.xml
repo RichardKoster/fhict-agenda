@@ -10,6 +10,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawSelectorOnTop="false"
-            android:background="@drawable/ic_launcher"/>
+            android:drawSelectorOnTop="false"/>
 </LinearLayout>
