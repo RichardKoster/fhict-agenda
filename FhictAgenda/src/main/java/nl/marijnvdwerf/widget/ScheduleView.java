@@ -16,6 +16,8 @@ import com.richardkoster.fhictagenda.R;
 
 import java.util.Date;
 
+import nl.marijnvdwerf.widget.ScheduleAdapter.ScheduleEvent;
+
 public class ScheduleView extends AdapterView<ScheduleAdapter> {
 
     private static int PADDING = 24;
@@ -70,6 +72,10 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         return getAdapter().getView(position, null, this);
     }
 
+    ScheduleEvent obtainEvent(int position) {
+        return getAdapter().getEvent(position);
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -78,12 +84,33 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         }
         for (int i = 0; i < getAdapter().getCountForDate(getDate()); i++) {
             View child = obtainView(i);
-            child.measure(MeasureSpec.makeMeasureSpec(436, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(128, MeasureSpec.EXACTLY));
-            child.layout(64, 128 * i, 500, 128 * i + 120);
+            ScheduleEvent event = obtainEvent(i);
+            Rect eventRect = getEventRect(i);
+            child.measure(MeasureSpec.makeMeasureSpec(eventRect.width(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(eventRect.height(), MeasureSpec.EXACTLY));
+            child.layout(eventRect.left, eventRect.top, eventRect.right, eventRect.bottom);
             addViewInLayout(child, i, null, true);
         }
 
         invalidate();
+    }
+
+    protected Rect getEventRect(int position) {
+        ScheduleEvent event = obtainEvent(position);
+        Rect r = new Rect();
+        r.top = getVerticalPosition(event.getStartDateTime());
+        r.bottom = getVerticalPosition(event.getEndDateTime());
+
+        int width = 352;
+        r.left = 80;
+        r.right = r.left + width;
+        if (position % 2 != 0) {
+            r.offset(352, 0);
+        }
+        return r;
+    }
+
+    protected int getVerticalPosition(Date dateTime) {
+        return getVerticalPosition(dateTime.getHours(), dateTime.getMinutes());
     }
 
     protected int getVerticalPosition(int hour, int minute) {
