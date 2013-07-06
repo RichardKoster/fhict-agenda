@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import nl.marijnvdwerf.app.ScheduleFragment;
@@ -23,48 +24,40 @@ public class DayScheduleFragment extends ScheduleFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Date today = new Date();
-        Date start;
-        Date end;
+        DateTime today = DateTime.now();
+        DateTime start;
+        DateTime end;
         events = new ArrayList<Event>();
 
-        start = (Date) today.clone();
-        start.setHours(8);
-        start.setMinutes(45);
-        end = (Date) start.clone();
-        end.setHours(10);
-        end.setMinutes(25);
+        start = today.withTime(8, 45, 0, 0);
+        end = today.withTime(10, 25, 0, 0);
         events.add(new Event("8:45-10:25", start, end));
 
-        start = (Date) today.clone();
-        start.setHours(9);
-        start.setMinutes(35);
-        end = (Date) start.clone();
-        end.setHours(11);
-        end.setMinutes(35);
+        start = today.withTime(9, 35, 0, 0);
+        end = today.withTime(11, 35, 0, 0);
         events.add(new Event("9:35-11:35", start, end));
 
         getScheduleView().setAdapter(new DayScheduleAdapter(getActivity(), events));
     }
 
     private class Event implements ScheduleAdapter.ScheduleEvent {
-        protected Date mStartDateTime;
-        protected Date mEndDateTime;
+        protected DateTime mStartDateTime;
+        protected DateTime mEndDateTime;
         private CharSequence mTitle;
 
-        public Event(String title, Date startDateTime, Date endDateTime) {
+        public Event(String title, DateTime startDateTime, DateTime endDateTime) {
             mTitle = title;
             mStartDateTime = startDateTime;
             mEndDateTime = endDateTime;
         }
 
         @Override
-        public Date getStartDateTime() {
+        public DateTime getStartDateTime() {
             return mStartDateTime;
         }
 
         @Override
-        public Date getEndDateTime() {
+        public DateTime getEndDateTime() {
             return mEndDateTime;
         }
 
@@ -85,7 +78,7 @@ public class DayScheduleFragment extends ScheduleFragment {
         }
 
         @Override
-        public int getCountForDate(Date date) {
+        public int getCountForDate(DateTime date) {
             return mEvents.size();
         }
 

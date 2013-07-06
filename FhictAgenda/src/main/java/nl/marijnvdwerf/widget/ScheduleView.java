@@ -14,14 +14,14 @@ import android.widget.AdapterView;
 
 import com.richardkoster.fhictagenda.R;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import nl.marijnvdwerf.widget.ScheduleAdapter.ScheduleEvent;
 
 public class ScheduleView extends AdapterView<ScheduleAdapter> {
 
     private static int PADDING = 24;
-    private Date mDate = new Date();
+    private DateTime mDate = DateTime.now();
 
     private ScheduleAdapter mScheduleAdapter;
 
@@ -49,12 +49,12 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         requestLayout();
     }
 
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         mDate = date;
         requestLayout();
     }
 
-    public Date getDate() {
+    public DateTime getDate() {
         return mDate;
     }
 
@@ -109,8 +109,8 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         return r;
     }
 
-    protected int getVerticalPosition(Date dateTime) {
-        return getVerticalPosition(dateTime.getHours(), dateTime.getMinutes());
+    protected int getVerticalPosition(DateTime dateTime) {
+        return getVerticalPosition(dateTime.getHourOfDay(), dateTime.getMinuteOfHour());
     }
 
     protected int getVerticalPosition(int hour, int minute) {

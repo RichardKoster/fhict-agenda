@@ -2,17 +2,17 @@ package nl.marijnvdwerf.widget;
 
 import android.widget.Adapter;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public interface ScheduleAdapter extends Adapter {
 
-    public int getCountForDate(Date date);
+    public int getCountForDate(DateTime date);
 
     public ScheduleEvent getEvent(int position);
 
     public static interface ScheduleEvent {
-        public Date getStartDateTime();
+        public DateTime getStartDateTime();
 
-        public Date getEndDateTime();
+        public DateTime getEndDateTime();
     }
 }
