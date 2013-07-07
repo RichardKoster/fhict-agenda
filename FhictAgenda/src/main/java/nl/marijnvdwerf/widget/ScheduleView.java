@@ -204,10 +204,12 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         r.top = getVerticalPosition(event.getStartDateTime());
         r.bottom = getVerticalPosition(event.getEndDateTime());
 
-        int maxWidth = getWidth() - 80 - 16;
+        int paddingLeft = Math.round(getResources().getDisplayMetrics().scaledDensity *  64f);
+        int paddingRight = Math.round(getResources().getDisplayMetrics().scaledDensity * 16f);
+        int maxWidth = getWidth() - paddingLeft - paddingRight;
         ScheduleEventPosition position = mEventPositions.get(event);
         int colWidth = maxWidth / position.totalColumnCount;
-        r.left = 80 + (colWidth * position.column);
+        r.left = paddingLeft + (colWidth * position.column);
         r.right = r.left + colWidth;
         return r;
     }
@@ -238,12 +240,14 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         Paint paint = new Paint();
         paint.setColor(Color.LTGRAY);
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(Math.round(getResources().getDisplayMetrics().scaledDensity * 1f));
         return paint;
     }
 
     public Paint getHalfHourLinePaint() {
         Paint paint = getHourLinePaint();
-        paint.setPathEffect(new DashPathEffect(new float[]{1, 1}, 0));
+        int dipWidth = Math.round(getResources().getDisplayMetrics().scaledDensity * 1f);
+        paint.setPathEffect(new DashPathEffect(new float[]{dipWidth, dipWidth}, 0));
         return paint;
     }
 
