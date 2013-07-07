@@ -1,14 +1,51 @@
 package nl.marijnvdwerf.widget;
 
-import android.widget.Adapter;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
 import org.joda.time.DateTime;
 
-public interface ScheduleAdapter extends Adapter {
+public abstract class ScheduleAdapter extends BaseAdapter {
 
-    public int getCountForDate(DateTime date);
+    @Override
+    public final boolean hasStableIds() {
+        return true;
+    }
 
-    public ScheduleEvent getEvent(int position);
+    @Override
+    public final Object getItem(int i) {
+        return null;
+    }
+
+    @Override
+    public final boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public final View getDropDownView(int position, View convertView, ViewGroup parent) {
+        return null;
+    }
+
+    @Override
+    public final boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public final int getCount() {
+        return -1;
+    }
+
+    @Override
+    public final long getItemId(int i) {
+        return -1;
+    }
+
+    public abstract int getCountForDate(DateTime date);
+
+    public abstract ScheduleEvent getEvent(int position);
 
     public static interface ScheduleEvent {
         public DateTime getStartDateTime();

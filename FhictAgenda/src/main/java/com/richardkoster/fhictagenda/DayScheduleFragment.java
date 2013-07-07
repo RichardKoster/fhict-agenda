@@ -82,7 +82,7 @@ public class DayScheduleFragment extends ScheduleFragment {
         }
     }
 
-    private class DayScheduleAdapter extends BaseAdapter implements ScheduleAdapter {
+    private class DayScheduleAdapter extends ScheduleAdapter {
         Context mContext;
         LayoutInflater mInflater;
         List<Event> mEvents;
@@ -101,21 +101,6 @@ public class DayScheduleFragment extends ScheduleFragment {
         @Override
         public Event getEvent(int position) {
             return mEvents.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
         }
 
         @Override
