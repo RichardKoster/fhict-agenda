@@ -30,12 +30,28 @@ public class DayScheduleFragment extends ScheduleFragment {
         events = new ArrayList<Event>();
 
         start = today.withTime(8, 45, 0, 0);
+        end = today.withTime(9, 35, 0, 0);
+        events.add(new Event("8:45-9:35", start, end));
+
+        start = today.withTime(8, 45, 0, 0);
         end = today.withTime(10, 25, 0, 0);
         events.add(new Event("8:45-10:25", start, end));
 
         start = today.withTime(9, 35, 0, 0);
         end = today.withTime(11, 35, 0, 0);
         events.add(new Event("9:35-11:35", start, end));
+
+        start = today.withTime(12, 25, 0, 0);
+        end = today.withTime(14, 05, 0, 0);
+        events.add(new Event("12:25-14:05", start, end));
+
+        start = today.withTime(12, 25, 0, 0);
+        end = today.withTime(14, 05, 0, 0);
+        events.add(new Event("12:25-14:05", start, end));
+
+        start = today.withTime(12, 25, 0, 0);
+        end = today.withTime(14, 05, 0, 0);
+        events.add(new Event("12:25-14:05", start, end));
 
         getScheduleView().setAdapter(new DayScheduleAdapter(getActivity(), events));
     }
