@@ -1,6 +1,7 @@
 package nl.marijnvdwerf.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -27,6 +28,7 @@ import nl.marijnvdwerf.widget.ScheduleAdapter.ScheduleEvent;
 public class ScheduleView extends AdapterView<ScheduleAdapter> {
 
     private static int PADDING = 24;
+    private int mHorizontalSpacing = 0;
     private DateTime mDate = DateTime.now();
 
     private ScheduleAdapter mScheduleAdapter;
@@ -37,11 +39,16 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
     }
 
     public ScheduleView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.scheduleViewStyle);
+        this(context, attrs, 0);
     }
 
     public ScheduleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScheduleView, defStyle, 0);
+
+        mHorizontalSpacing = a.getDimensionPixelOffset(R.styleable.ScheduleView_horizontalSpacing, 0);
+
         setBackgroundColor(Color.TRANSPARENT);
     }
 
@@ -211,6 +218,18 @@ public class ScheduleView extends AdapterView<ScheduleAdapter> {
         int colWidth = maxWidth / position.totalColumnCount;
         r.left = paddingLeft + (colWidth * position.column);
         r.right = r.left + colWidth;
+
+        float spacing = ((float) mHorizontalSpacing) / 2f;
+
+        if (position.column > 0) {
+            // apply half of the spacing to the left;
+            r.left += Math.floor(spacing);
+        }
+        if (position.column < position.totalColumnCount) {
+            // apply half of the spacing to the right;
+            r.right -= Math.ceil(spacing);
+        }
+
         return r;
     }
 
