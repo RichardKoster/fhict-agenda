@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.richardkoster.fhictagenda.api.FhictClient;
 import com.richardkoster.fhictagenda.api.objects.LoginResult;
+import com.richardkoster.fhictagenda.api.objects.User;
+import com.richardkoster.fhictagenda.application.CalendarApplication;
 
 import java.util.regex.Pattern;
 
@@ -47,11 +49,33 @@ public class LoginActivity extends Activity {
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
 
+    //application
+    CalendarApplication app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+        app = (CalendarApplication) getApplication();
+
+        String token = app.getToken();
+        if (token != null) {
+            showProgress(true);
+            FhictClient.getApi().getUser(token, new Callback<User>() {
+                @Override
+                public void success(User user, Response response) {
+                    showProgress(false);
+                    Toast.makeText(getApplicationContext(), user.name, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    showProgress(false);
+                }
+            });
+        }
 
         // Set up the login form.
         mPcnView = (EditText) findViewById(R.id.pcn);
@@ -131,6 +155,7 @@ public class LoginActivity extends Activity {
                 @Override
                 public void success(LoginResult loginResult, Response response) {
                     showProgress(false);
+                    app.storeToken(loginResult.accessToken);
                     Toast.makeText(getApplicationContext(), loginResult.user.name, Toast.LENGTH_SHORT).show();
                 }
 
