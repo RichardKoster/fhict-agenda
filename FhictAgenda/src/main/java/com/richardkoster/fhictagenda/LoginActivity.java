@@ -89,7 +89,7 @@ public class LoginActivity extends Activity {
         String token = app.getToken();
         if (token != null) {
             showProgress(true);
-            FhictClient.getApi().getUser(token, new Callback<User>() {
+            FhictClient.getApi(token).getUser(new Callback<User>() {
                 @Override
                 public void success(User user, Response response) {
                     showProgress(false);
