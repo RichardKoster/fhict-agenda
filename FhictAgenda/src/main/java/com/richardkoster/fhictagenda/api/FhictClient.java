@@ -13,7 +13,7 @@ import retrofit.http.POST;
 import retrofit.http.Query;
 
 public class FhictClient {
-    private static final String API_URL = "http://fhictapi.marijnvdwerf.nl";
+    private static final String API_URL = "http://waffle.marijnvdwerf.nl/api";
 
     public static Fhict getApi() {
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -30,4 +30,5 @@ public class FhictClient {
         @GET("/me")
         void getUser(@Query("token") String accessToken, Callback<User> cb);
     }
+
 }

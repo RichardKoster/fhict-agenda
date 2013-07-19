@@ -1,11 +1,14 @@
 package com.richardkoster.fhictagenda.api.objects;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class User {
     public String name;
-    public String student_no;
+    @SerializedName("student_id")
+    public String studentId;
     public String pcn;
-    public List<String> classes;
+    public List<Schedule> schedules;
     public String email;
 }

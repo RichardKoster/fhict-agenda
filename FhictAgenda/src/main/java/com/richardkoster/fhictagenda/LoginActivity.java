@@ -3,6 +3,7 @@ package com.richardkoster.fhictagenda;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.richardkoster.fhictagenda.api.FhictClient;
 import com.richardkoster.fhictagenda.api.objects.LoginResult;
@@ -60,23 +60,6 @@ public class LoginActivity extends Activity {
 
         app = (CalendarApplication) getApplication();
 
-        String token = app.getToken();
-        if (token != null) {
-            showProgress(true);
-            FhictClient.getApi().getUser(token, new Callback<User>() {
-                @Override
-                public void success(User user, Response response) {
-                    showProgress(false);
-                    Toast.makeText(getApplicationContext(), user.name, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void failure(RetrofitError retrofitError) {
-                    showProgress(false);
-                }
-            });
-        }
-
         // Set up the login form.
         mPcnView = (EditText) findViewById(R.id.pcn);
 
@@ -102,6 +85,25 @@ public class LoginActivity extends Activity {
                 attemptLogin();
             }
         });
+
+        String token = app.getToken();
+        if (token != null) {
+            showProgress(true);
+            FhictClient.getApi().getUser(token, new Callback<User>() {
+                @Override
+                public void success(User user, Response response) {
+                    showProgress(false);
+                    app.setUser(user);
+                    Intent intent = new Intent(getApplicationContext(), ScheduleManagementActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    showProgress(false);
+                }
+            });
+        }
     }
 
 
@@ -156,7 +158,9 @@ public class LoginActivity extends Activity {
                 public void success(LoginResult loginResult, Response response) {
                     showProgress(false);
                     app.storeToken(loginResult.accessToken);
-                    Toast.makeText(getApplicationContext(), loginResult.user.name, Toast.LENGTH_SHORT).show();
+                    app.setUser(loginResult.user);
+                    Intent intent = new Intent(getApplicationContext(), ScheduleManagementActivity.class);
+                    startActivity(intent);
                 }
 
                 @Override
