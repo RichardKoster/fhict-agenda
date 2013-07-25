@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">24dp</dimen>
     <dimen name="activity_vertical_margin">32dp</dimen>
     <dimen name="actionbar_height">48dp</dimen>
+    <dimen name="actionbar_tab_width">48dp</dimen>
+    <dimen name="actionbar_tab_text_size">12sp</dimen>
 </resources>

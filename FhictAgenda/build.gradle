@@ -15,6 +15,7 @@ repositories {
 dependencies {
     compile 'com.android.support:support-v4:13.0.+'
     compile 'com.squareup.retrofit:retrofit:1.1.+'
+    compile 'joda-time:joda-time:2.2'
     instrumentTestCompile 'com.squareup:fest-android:1.0.+'
 }
 
