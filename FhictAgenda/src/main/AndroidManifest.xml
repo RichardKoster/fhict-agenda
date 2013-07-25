@@ -31,6 +31,10 @@
                 android:name=".ScheduleManagementActivity"
                 android:label="@string/title_activity_schedule_management">
         </activity>
+        <activity
+                android:name=".ScheduleActivity"
+                android:label="@string/title_activity_schedule">
+        </activity>
 
     </application>
 

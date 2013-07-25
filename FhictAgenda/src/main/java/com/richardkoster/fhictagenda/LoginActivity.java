@@ -94,7 +94,7 @@ public class LoginActivity extends Activity {
                 public void success(User user, Response response) {
                     showProgress(false);
                     app.setUser(user);
-                    Intent intent = new Intent(getApplicationContext(), ScheduleManagementActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), ScheduleActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -160,7 +160,7 @@ public class LoginActivity extends Activity {
                     showProgress(false);
                     app.storeToken(loginResult.accessToken);
                     app.setUser(loginResult.user);
-                    Intent intent = new Intent(getApplicationContext(), ScheduleManagementActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), ScheduleActivity.class);
                     startActivity(intent);
                     finish();
                 }
