@@ -6,16 +6,19 @@
               tools:context=".ScheduleActivity$DummySectionFragment">
 
     <com.richardkoster.fhictagenda.CalendarStrip
+            android:id="@+id/calendar_strip"
             android:layout_width="match_parent"
             android:layout_height="@dimen/actionbar_height"
             android:background="#d6d6d6"
             />
 
     <TextView
-            android:id="@+id/section_label"
+            android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_centerInParent="true"/>
+            android:textSize="24sp"
+            android:textAllCaps="true"
+            android:gravity="center"/>
 
 </LinearLayout>

@@ -14,10 +14,11 @@ import android.widget.FrameLayout;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 
-public class CalendarStrip extends FrameLayout {
+public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChangeListener {
 
 
     private final ViewPager mViewPager;
+    OnDateChangeListener mDateChangeListener;
     private DateTime mStartDate;
     private DateTime mEndDate;
 
@@ -37,6 +38,7 @@ public class CalendarStrip extends FrameLayout {
 
         mViewPager = new ViewPager(getContext());
         mViewPager.setAdapter(new CalendarWeekAdapter(mStartDate, mEndDate));
+        mViewPager.setOnPageChangeListener(this);
 
         addView(mViewPager, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -74,6 +76,43 @@ public class CalendarStrip extends FrameLayout {
         rectPaint.setColor(getResources().getColor(R.color.holo_blue_light));
         int underlineHeight = Math.round(getResources().getDisplayMetrics().scaledDensity * 4f);
         canvas.drawRect(lineLeft, height - underlineHeight, lineRight, height, rectPaint);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (mDateChangeListener == null) {
+            return;
+        }
+
+        DateTime weekStart = mStartDate.plusWeeks(position);
+
+        mDateChangeListener.onDateSelected(weekStart);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    public void setOnDateChangeListener(OnDateChangeListener listener) {
+        mDateChangeListener = listener;
+    }
+
+    public DateTime getCurrentDate() {
+        DateTime date = mStartDate;
+        date = date.plusWeeks(mViewPager.getCurrentItem());
+        return date;
+    }
+
+    interface OnDateChangeListener {
+
+        public void onDateSelected(DateTime date);
+
     }
 
     class CalendarWeekAdapter extends PagerAdapter {
