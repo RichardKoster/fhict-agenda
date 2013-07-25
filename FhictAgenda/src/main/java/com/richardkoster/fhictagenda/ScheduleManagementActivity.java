@@ -23,7 +23,7 @@ public class ScheduleManagementActivity extends ListActivity implements ActionMo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule);
+        setContentView(R.layout.activity_schedule_management);
 
         app = (CalendarApplication) getApplication();
         user = app.getUser();
@@ -39,13 +39,13 @@ public class ScheduleManagementActivity extends ListActivity implements ActionMo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.schedule, menu);
+        getMenuInflater().inflate(R.menu.schedule_management, menu);
         return true;
     }
 
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-        actionMode.getMenuInflater().inflate(R.menu.schedule, menu);
+        actionMode.getMenuInflater().inflate(R.menu.schedule_management, menu);
 
         return true;
     }

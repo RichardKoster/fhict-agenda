@@ -21,7 +21,7 @@ public class ScheduleListAdapter extends ArrayAdapter<Schedule> {
     private ScheduleListItemView mScheduleListItemView;
 
     public ScheduleListAdapter(Context context, List<Schedule> schedules) {
-        super(context, R.layout.activity_schedule, schedules);
+        super(context, R.layout.activity_schedule_management, schedules);
         this.schedules = schedules;
         this.context = context;
     }

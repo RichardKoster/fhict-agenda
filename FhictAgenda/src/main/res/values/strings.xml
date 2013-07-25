@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">FhictAgenda</string>
-    <string name="title_activity_schedule">ScheduleActivity</string>
+    <string name="title_activity_schedule_management">Manage Schedules</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
