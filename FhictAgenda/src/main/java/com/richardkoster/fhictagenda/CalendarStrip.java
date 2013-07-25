@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 
-public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChangeListener {
+public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChangeListener, WeekView.OnDateSelectedListener {
 
 
     private final ViewPager mViewPager;
@@ -67,7 +67,7 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
         int currentPosition = mViewPager.getCurrentItem();
         WeekView currentWeek = (WeekView) mViewPager.findViewWithTag(Integer.toString(currentPosition));
 
-        View currentTab = currentWeek.getChildAt(0);
+        View currentTab = currentWeek.getChildAt(currentWeek.getSelectedDay() - 1);
         float lineLeft = currentTab.getLeft();
         float lineRight = currentTab.getRight();
 
@@ -109,6 +109,16 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
         return date;
     }
 
+    @Override
+    public void onDateSelected(DateTime date) {
+        if (mDateChangeListener == null) {
+            return;
+        }
+
+        mDateChangeListener.onDateSelected(date);
+        invalidate();
+    }
+
     interface OnDateChangeListener {
 
         public void onDateSelected(DateTime date);
@@ -147,6 +157,7 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
 
             WeekView weekView = new WeekView(getContext());
             weekView.setStartDate(startDate);
+            weekView.setOnDateSelectedListener(CalendarStrip.this);
 
             weekView.setTag(Integer.toString(position));
 
