@@ -72,7 +72,7 @@ public class CalendarStrip extends FrameLayout {
         // draw indicator line
         Paint rectPaint = new Paint();
         rectPaint.setColor(getResources().getColor(R.color.holo_blue_light));
-        int underlineHeight = Math.round(getResources().getDisplayMetrics().scaledDensity * 3f);
+        int underlineHeight = Math.round(getResources().getDisplayMetrics().scaledDensity * 4f);
         canvas.drawRect(lineLeft, height - underlineHeight, lineRight, height, rectPaint);
     }
 
