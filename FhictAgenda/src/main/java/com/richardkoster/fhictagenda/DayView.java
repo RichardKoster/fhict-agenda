@@ -84,8 +84,23 @@ public class DayView extends FrameLayout implements ViewPager.OnPageChangeListen
         return mStartDate.plusWeeks(weeks).plusDays(day);
     }
 
+    private int getPosition(DateTime date) {
+        int weeks = Weeks.weeksBetween(mStartDate, date).getWeeks();
+        int weekDay = date.getDayOfWeek() - 1;
+        return weeks * 5 + weekDay;
+    }
+
     public DateTime getCurrentDate() {
         return getDate(mViewPager.getCurrentItem());
+    }
+
+    public void setCurrentDate(DateTime date) {
+        setCurrentDate(date, true);
+    }
+
+    public void setCurrentDate(DateTime date, boolean smoothScroll) {
+        int position = getPosition(date);
+        mViewPager.setCurrentItem(position, smoothScroll);
     }
 
     public interface OnDateChangeListener {

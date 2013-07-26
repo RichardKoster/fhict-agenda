@@ -134,12 +134,11 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
 
     @Override
     public void onDateSelected(DateTime date) {
-        if (mDateChangeListener == null) {
+        if (mDayView == null) {
             return;
         }
 
-        mDateChangeListener.onDateSelected(date);
-        invalidate();
+        mDayView.setCurrentDate(date);
     }
 
     public void setDayView(DayView dayView) {
