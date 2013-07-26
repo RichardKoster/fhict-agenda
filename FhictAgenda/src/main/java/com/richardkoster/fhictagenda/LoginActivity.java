@@ -96,6 +96,7 @@ public class LoginActivity extends Activity {
                     app.setUser(user);
                     Intent intent = new Intent(getApplicationContext(), ScheduleManagementActivity.class);
                     startActivity(intent);
+                    finish();
                 }
 
                 @Override
@@ -161,6 +162,7 @@ public class LoginActivity extends Activity {
                     app.setUser(loginResult.user);
                     Intent intent = new Intent(getApplicationContext(), ScheduleManagementActivity.class);
                     startActivity(intent);
+                    finish();
                 }
 
                 @Override
