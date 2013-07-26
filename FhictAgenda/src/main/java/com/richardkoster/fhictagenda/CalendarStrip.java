@@ -44,11 +44,10 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
         mViewPager = new ViewPager(getContext());
         mViewPager.setAdapter(new CalendarWeekAdapter(mStartDate, mEndDate));
         mViewPager.setOnPageChangeListener(this);
-
         addView(mViewPager, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        //WeekView mWeek = new WeekView(getContext());
-        //addView(mWeek, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        WeekHeaderView headerView = new WeekHeaderView(getContext());
+        addView(headerView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     private void setEndDate(DateTime dateTime) {
