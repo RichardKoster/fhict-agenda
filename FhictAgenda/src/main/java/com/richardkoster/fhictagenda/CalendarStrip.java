@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.Weeks;
 
 public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChangeListener, WeekView.OnDateSelectedListener {
@@ -21,6 +22,10 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
     OnDateChangeListener mDateChangeListener;
     private DateTime mStartDate;
     private DateTime mEndDate;
+    private DayView mDayView;
+    private DayView.OnDateChangeListener mDateListener = new DateListener();
+    private int mCurrentWeekDay = DateTimeConstants.MONDAY;
+    private float mCurrentDayOffset;
 
     public CalendarStrip(Context context) {
         this(context, null);
@@ -33,8 +38,8 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
     public CalendarStrip(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        setStartDate(new DateTime().withDate(2013, 7, 26));
-        setEndDate(new DateTime().withDate(2013, 8, 27));
+        setStartDate(new DateTime().withDate(2013, 7, 22));
+        setEndDate(new DateTime().withDate(2013, 8, 30));
 
         mViewPager = new ViewPager(getContext());
         mViewPager.setAdapter(new CalendarWeekAdapter(mStartDate, mEndDate));
@@ -67,15 +72,34 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
         int currentPosition = mViewPager.getCurrentItem();
         WeekView currentWeek = (WeekView) mViewPager.findViewWithTag(Integer.toString(currentPosition));
 
-        View currentTab = currentWeek.getChildAt(currentWeek.getSelectedDay() - 1);
-        float lineLeft = currentTab.getLeft();
-        float lineRight = currentTab.getRight();
+        int currentDay = mCurrentWeekDay;
+        View currentTab = currentWeek.getChildAt(currentDay - 1);
+        float lineLeft;
+        float lineRight;
+
+        if (mCurrentDayOffset > 0f) {
+            int nextDay = currentDay + 1;
+            if (nextDay == DateTimeConstants.SATURDAY) {
+                nextDay = DateTimeConstants.MONDAY;
+            }
+            View nextTab = currentWeek.getChildAt(nextDay - 1);
+
+            lineLeft = interpolate(currentTab.getLeft(), nextTab.getLeft(), mCurrentDayOffset);
+            lineRight = interpolate(currentTab.getRight(), nextTab.getRight(), mCurrentDayOffset);
+        } else {
+            lineLeft = currentTab.getLeft();
+            lineRight = currentTab.getRight();
+        }
 
         // draw indicator line
         Paint rectPaint = new Paint();
         rectPaint.setColor(getResources().getColor(R.color.holo_blue_light));
         int underlineHeight = Math.round(getResources().getDisplayMetrics().scaledDensity * 4f);
         canvas.drawRect(lineLeft, height - underlineHeight, lineRight, height, rectPaint);
+    }
+
+    private float interpolate(float from, float to, float offset) {
+        return from + (to - from) * offset;
     }
 
     @Override
@@ -117,6 +141,11 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
 
         mDateChangeListener.onDateSelected(date);
         invalidate();
+    }
+
+    public void setDayView(DayView dayView) {
+        mDayView = dayView;
+        mDayView.setOnDateChangeListener(mDateListener);
     }
 
     interface OnDateChangeListener {
@@ -169,6 +198,61 @@ public class CalendarStrip extends FrameLayout implements ViewPager.OnPageChange
         @Override
         public boolean isViewFromObject(View view, Object o) {
             return view == o;
+        }
+    }
+
+    public void scrollToDate(DateTime date) {
+        scrollToDate(date, 0f);
+    }
+
+    float mLastOffset = 0.0f;
+
+    public void scrollToDate(DateTime date, float offsetPosition) {
+        int week = Weeks.weeksBetween(mStartDate, date).getWeeks();
+
+        mCurrentWeekDay = date.getDayOfWeek();
+        mCurrentDayOffset = offsetPosition;
+
+
+        mViewPager.setCurrentItem(week, false);
+        if (date.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+            // Simulate drag to the LEFT (hence the negative value)
+            float offset = -1 * offsetPosition * getWidth();
+
+            if (!mViewPager.isFakeDragging()) {
+                mViewPager.beginFakeDrag();
+                mLastOffset = 0;
+            } else {
+                // first undo last scroll
+                mViewPager.fakeDragBy(-1 * mLastOffset);
+                mViewPager.fakeDragBy(offset);
+                mLastOffset = offset;
+            }
+        }
+
+        invalidate();
+    }
+
+    private class DateListener implements DayView.OnDateChangeListener {
+        @Override
+        public void onDateScrollStateChanged(int state) {
+            if (state == DayView.SCROLL_STATE_IDLE) {
+                if (mViewPager.isFakeDragging()) {
+                    mViewPager.endFakeDrag();
+                }
+                scrollToDate(mDayView.getCurrentDate());
+                invalidate();
+            }
+        }
+
+        @Override
+        public void onDateScrolled(DateTime left, float offset, DateTime right) {
+            scrollToDate(left, offset);
+        }
+
+        @Override
+        public void onDateSelected(DateTime date) {
+
         }
     }
 }

@@ -5,26 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
-public class ScheduleActivity extends Activity implements CalendarStrip.OnDateChangeListener {
+public class ScheduleActivity extends Activity {
 
     private CalendarStrip mCalendarStrip;
-    private TextView mDateView;
+    private DayView mDayView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        mDateView = (TextView) findViewById(R.id.date);
+        mDayView = (DayView) findViewById(R.id.date);
 
         mCalendarStrip = (CalendarStrip) findViewById(R.id.calendar_strip);
-        mCalendarStrip.setOnDateChangeListener(this);
-        mDateView.setText(mCalendarStrip.getCurrentDate().toString(DateTimeFormat.forPattern("d MMM")));
+        mCalendarStrip.setDayView(mDayView);
     }
 
     @Override
@@ -43,10 +38,5 @@ public class ScheduleActivity extends Activity implements CalendarStrip.OnDateCh
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDateSelected(DateTime date) {
-        mDateView.setText(date.toString(DateTimeFormat.forPattern("d MMM")));
     }
 }
