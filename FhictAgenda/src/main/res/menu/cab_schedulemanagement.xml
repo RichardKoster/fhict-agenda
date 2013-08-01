@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:title="Pick a color"
+            android:id="@+id/cab_schedulemanagement_colorpicker"
+            android:icon="@drawable/ic_menu_palette"
+            android:showAsAction="always"
+            android:actionProviderClass="com.richardkoster.fhictagenda.ColorPickerActionProvider"/>
+
+    <item
+            android:id="@+id/cab_schedulemanagement_unpin"
+            android:title="Unpin"
+            android:icon="@drawable/ic_menu_unpin"/>
+
+
+</menu>

@@ -2,6 +2,7 @@ package com.richardkoster.fhictagenda.api;
 
 
 import com.richardkoster.fhictagenda.api.objects.LoginResult;
+import com.richardkoster.fhictagenda.api.objects.Schedule;
 import com.richardkoster.fhictagenda.api.objects.User;
 
 import retrofit.Callback;
@@ -11,6 +12,8 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 
 public class FhictClient {
     private static final String API_URL = "http://waffle.marijnvdwerf.nl/api";
@@ -44,6 +47,10 @@ public class FhictClient {
     public interface FhictAuthorized {
         @GET("/me")
         void getUser(Callback<User> cb);
+
+        @FormUrlEncoded
+        @PUT("/me/schedules/{id}")
+        void updateScheduleColor(@Path("id") String id, @Field("color") String color, Callback<Schedule> cb);
     }
 
 }
