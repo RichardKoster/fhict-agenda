@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity
+                android:label="ScheduleView"
                 android:name="com.richardkoster.fhictagenda.ScheduleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
